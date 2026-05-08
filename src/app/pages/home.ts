@@ -80,7 +80,6 @@ import {animate, stagger, scroll} from "motion";
                                     src="video-sobre.mp4"
                                     class="w-full h-full object-cover transition-transform duration-1000"
                                     autoplay
-                                    loop
                                     playsinline
                                     preload="auto"
                                     (loadedmetadata)="heroVideo.play()"
