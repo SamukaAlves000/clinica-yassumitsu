@@ -70,7 +70,7 @@ import { MatIconModule } from '@angular/material/icon';
       <!-- Mobile Menu Overlay -->
       @if (isMenuOpen) {
         <div 
-          class="absolute top-full left-0 right-0 glass pt-4 pb-8 flex flex-col items-center gap-6 shadow-xl animate-fade-in"
+          class="absolute top-full left-0 right-0 bg-white pt-4 pb-8 flex flex-col items-center gap-6 shadow-xl animate-fade-in"
         >
           @for (item of menuItems; track item.path) {
             <a 

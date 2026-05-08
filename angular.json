@@ -25,21 +25,17 @@
             },
             "browser": "src/main.ts",
             "tsConfig": "tsconfig.app.json",
-
             "assets": [
               {
                 "glob": "**/*",
                 "input": "public"
               },
-              "src/favicon.ico",
-              "src/assets"
+              "src/_redirects"
             ],
-
             "styles": [
               "src/styles.css"
             ]
           },
-
           "configurations": {
             "production": {
               "budgets": [
@@ -56,40 +52,31 @@
               ],
               "outputHashing": "all"
             },
-
             "development": {
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true
             }
           },
-
           "defaultConfiguration": "production"
         },
-
         "serve": {
           "builder": "@angular/build:dev-server",
-
           "configurations": {
             "production": {
               "buildTarget": "app:build:production"
             },
-
             "development": {
               "buildTarget": "app:build:development"
             }
           },
-
           "defaultConfiguration": "development"
         },
-
         "test": {
           "builder": "@angular/build:unit-test"
         },
-
         "lint": {
           "builder": "@angular-eslint/builder:lint",
-
           "options": {
             "lintFilePatterns": [
               "src/**/*.ts",
