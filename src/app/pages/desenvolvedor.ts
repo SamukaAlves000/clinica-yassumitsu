@@ -181,13 +181,13 @@ export class Desenvolvedor {
   experience = [
     {
       company: 'act digital',
-      role: 'Analista de Desenvolvimento',
+      role: 'Analista de Sistemas',
       period: 'Jun de 2025 – Atual',
       location: 'Brasília – DF | Remoto'
     },
     {
       company: 'Stefanini Brasil',
-      role: 'Analista Desenvolvedor Pleno/Júnior',
+      role: 'Analista Desenvolvedor Pleno',
       period: 'Ago de 2020 – Jun de 2025',
       location: 'Brasília – DF'
     },
