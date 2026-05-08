@@ -76,9 +76,11 @@ import {animate, stagger, scroll} from "motion";
                     <div class="w-full lg:w-1/2 relative flex items-center justify-center lg:justify-end">
                         <div class="relative w-full max-w-xl aspect-[4/5] rounded-[40px] overflow-hidden shadow-3xl border border-white group animate-item hero-video-container">
                             <video
+                                    #heroVideo
                                     src="/video-sobre.mp4"
                                     class="w-full h-full object-cover transition-transform duration-1000"
                                     autoplay
+                                    loop
                                     playsinline
                             ></video>
                             
