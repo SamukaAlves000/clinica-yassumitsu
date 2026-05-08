@@ -1,4 +1,4 @@
-import {Component, AfterViewInit, ElementRef, ViewChild, inject, PLATFORM_ID, OnInit} from '@angular/core';
+import {Component, AfterViewInit, ElementRef, ViewChild, inject, PLATFORM_ID, OnInit, signal} from '@angular/core';
 import {CommonModule, isPlatformBrowser} from '@angular/common';
 import {RouterModule} from '@angular/router';
 import {MatIconModule} from '@angular/material/icon';
@@ -77,13 +77,33 @@ import {animate, stagger, scroll} from "motion";
                         <div class="relative w-full max-w-xl aspect-[4/5] rounded-[40px] overflow-hidden shadow-3xl border border-white group animate-item hero-video-container">
                             <video
                                     #heroVideo
-                                    src="/video-sobre.mp4"
+                                    src="video-sobre.mp4"
                                     class="w-full h-full object-cover transition-transform duration-1000"
                                     autoplay
                                     playsinline
                                     preload="auto"
                                     (loadedmetadata)="heroVideo.play()"
+                                    (canplay)="heroVideo.play()"
                             ></video>
+
+                            <!-- Audio Control -->
+                            <button
+                                (click)="toggleAudio()"
+                                class="absolute bottom-6 right-6 w-12 h-12 rounded-full bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center text-white hover:bg-white/40 transition-all z-20 group/audio"
+                                [title]="isMuted() ? 'Ativar som' : 'Desativar som'"
+                            >
+                                <mat-icon class="text-2xl transition-transform group-hover/audio:scale-110">
+                                    {{ isMuted() ? 'volume_off' : 'volume_up' }}
+                                </mat-icon>
+                                
+                                <!-- Visual indicator that audio is playing -->
+                                @if (!isMuted()) {
+                                    <span class="absolute -top-1 -right-1 flex h-3 w-3">
+                                      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                                      <span class="relative inline-flex rounded-full h-3 w-3 bg-primary"></span>
+                                    </span>
+                                }
+                            </button>
                             
 <!--                            <div class="absolute bottom-8 left-8 right-8 p-6 bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl flex items-center justify-between">-->
 <!--                                <div class="flex flex-col">-->
@@ -575,6 +595,8 @@ export class Home implements AfterViewInit, OnInit {
     @ViewChild('diffsGrid') diffsGrid!: ElementRef;
     @ViewChild('heroVideo') heroVideo!: ElementRef<HTMLVideoElement>;
 
+    isMuted = signal(true);
+
     heroTags = [
         {label: 'Invisalign Provider', color: 'bg-emerald-500'},
         {label: 'Scanner iTero', color: 'bg-primary'},
@@ -800,6 +822,19 @@ export class Home implements AfterViewInit, OnInit {
         this.meta.updateTag({name: 'author', content: 'Clínica Yassumitsu'});
     }
 
+    toggleAudio() {
+        if (this.heroVideo && this.heroVideo.nativeElement) {
+            const video = this.heroVideo.nativeElement;
+            video.muted = !video.muted;
+            this.isMuted.set(video.muted);
+            
+            // Se o vídeo estava pausado (alguns navegadores pausam se o autoplay falhar), tenta dar play
+            if (video.paused) {
+                video.play().catch(() => { /* empty */ });
+            }
+        }
+    }
+
     ngAfterViewInit() {
         if (isPlatformBrowser(this.platformId)) {
             // Stagger animations for Hero items
@@ -822,7 +857,13 @@ export class Home implements AfterViewInit, OnInit {
 
             // Play hero video
             if (this.heroVideo && this.heroVideo.nativeElement) {
-                this.heroVideo.nativeElement.play().catch(err => console.log('Autoplay blocked:', err));
+                const video = this.heroVideo.nativeElement;
+                video.muted = true; // Reforçar muted via código
+                video.play().catch(err => {
+                    console.log('Autoplay blocked, attempting again on interaction:', err);
+                    // Fallback: tentar tocar novamente se houver interação ou após um pequeno delay
+                    setTimeout(() => video.play().catch(() => {}), 1000);
+                });
             }
         }
     }
